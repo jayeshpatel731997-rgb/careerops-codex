@@ -1,7 +1,13 @@
 # Personal data (user fills these)
+cv.md
+article-digest.md
 data/applications.md
 data/pipeline.md
 data/scan-history.tsv
+data/follow-ups.md
+data/job-alert-emails/
+interview-prep/*
+!interview-prep/.gitkeep
 reports/*.md
 !reports/.gitkeep
 output/*
@@ -21,6 +27,11 @@ portals.yml
 modes/_profile.md
 .update-dismissed
 .update-lock
+
+# User-specific application package builders
+scripts/build-role-resumes.mjs
+scripts/build-*-package.mjs
+scripts/build_*_cover_letter.py
 
 # Generated
 .resolved-prompt-*

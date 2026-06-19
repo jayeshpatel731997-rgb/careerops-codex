@@ -18,6 +18,7 @@ All scripts live in the project root as `.mjs` modules and are exposed via `npm 
 | `npm run rollback` | `update-system.mjs rollback` | Rollback last update |
 | `npm run liveness` | `check-liveness.mjs` | Test if job URLs are still active |
 | `npm run scan` | `scan.mjs` | Zero-token portal scanner |
+| `npm run job-alerts` | `job-alerts.mjs` | Parse job-alert emails into Notion-ready rows |
 
 ---
 
@@ -187,3 +188,36 @@ npm run scan
 ```
 
 **Exit codes:** `0` scan completed, `1` configuration error or no portals.yml found.
+
+---
+
+## job-alerts
+
+Parses recent job-alert email exports, groups duplicate roles, scores supply-chain and operations fit from `config/profile.yml`, and writes Notion-ready rows. This script does not submit applications and does not add rows directly to `data/applications.md`.
+
+Supported inputs:
+
+- `.eml` files exported from an email client
+- Gmail/Google Takeout `.mbox` files
+- `.json` or `.jsonl` message dumps with fields like `subject`, `from`, `date`, `body`, `text`, `html`, or `snippet`
+- Plain `.txt` or `.html` alert files
+
+Outputs are written to `output/job-alerts/`:
+
+- `YYYY-MM-DD-job-alert-notion.csv`
+- `YYYY-MM-DD-job-alert-notion.tsv`
+- `YYYY-MM-DD-job-alert-notion.md`
+- `YYYY-MM-DD-job-alert-notion.json`
+
+```bash
+npm run job-alerts -- --input data/job-alert-emails --days 3
+npm run job-alerts -- --input ~/Downloads/JobAlerts.mbox --since 2026-06-01
+npm run job-alerts -- --input data/job-alert-emails --include-low-fit --top 50
+```
+
+Morning workflow:
+
+1. Export or save recent job-alert emails into a local folder such as `data/job-alert-emails/`.
+2. Run `npm run job-alerts -- --input data/job-alert-emails --days 1`.
+3. Open the CSV/TSV and paste or import the Strong/Good rows into the Notion tracker for manual review.
+4. For roles worth pursuing, run the normal Career-Ops evaluation/package flow before applying.
